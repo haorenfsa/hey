@@ -63,6 +63,9 @@ type Work struct {
 	// C is the concurrency level, the number of concurrent workers to run.
 	C int
 
+	// W is the number of workers to run, default same as C.
+	W int
+
 	// H2 is an option to make HTTP/2 requests
 	H2 bool
 
@@ -253,9 +256,9 @@ func (b *Work) runWorkers() {
 	client := &http.Client{Transport: tr, Timeout: time.Duration(b.Timeout) * time.Second}
 
 	// Ignore the case where b.N % b.C != 0.
-	for i := 0; i < b.C; i++ {
+	for i := 0; i < b.W; i++ {
 		go func() {
-			b.runWorker(client, b.N/b.C)
+			b.runWorker(client, b.N/b.W)
 			wg.Done()
 		}()
 	}

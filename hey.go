@@ -52,6 +52,7 @@ var (
 	output = flag.String("o", "", "")
 
 	c = flag.Int("c", 50, "")
+	w = flag.Int("w", 0, "")
 	n = flag.Int("n", 200, "")
 	q = flag.Float64("q", 0, "")
 	t = flag.Int("t", 20, "")
@@ -70,8 +71,9 @@ var usage = `Usage: hey [options...] <url>
 
 Options:
   -n  Number of requests to run. Default is 200.
-  -c  Number of workers to run concurrently. Total number of requests cannot
+  -c  Number of connections concurrently. Total number of requests cannot
       be smaller than the concurrency level. Default is 50.
+  -w  Number of workers to run concurrently. Default same as -c. useful when testing h2
   -q  Rate limit, in queries per second (QPS) per worker. Default is no rate limit.
   -z  Duration of application to send requests. When duration is reached,
       application stops and exits. If duration is specified, n is ignored.
@@ -114,6 +116,9 @@ func main() {
 	flag.Parse()
 	if flag.NArg() < 1 {
 		usageAndExit("")
+	}
+	if *w < 1 {
+		w = c
 	}
 
 	runtime.GOMAXPROCS(*cpus)
