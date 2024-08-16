@@ -231,6 +231,7 @@ func main() {
 		RequestBody:        bodyAll,
 		N:                  num,
 		C:                  conc,
+		W:                  *w,
 		QPS:                q,
 		Timeout:            *t,
 		DisableCompression: *disableCompression,
